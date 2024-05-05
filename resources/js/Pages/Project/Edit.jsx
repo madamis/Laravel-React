@@ -6,7 +6,7 @@ import InputLabel from "@/Components/InputLabel.jsx";
 import InputError from "@/Components/InputError";
 import TextAreaInput from "@/Components/TextAreaInput.jsx";
 import SelectInput from "@/Components/SelectInput.jsx";
-import ProjectForm from "@/Components/ProjectForm";
+import ProjectForm from "@/Components/Forms/ProjectForm.jsx";
 
 export default function Edit({auth, project}){
 

@@ -42,28 +42,6 @@ export default function TasksTable({tasks, queryParams = null})
                 <table className="w-full text-sm text-left trl:text-right text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:text-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
                     <tr className="text-nowrap">
-                        <th className="px-3 py-2">ID</th>
-                        <th className="px-3 py-2">Image</th>
-                        <th>
-                            <SortField queryParams={queryParams} field='name' sortFieldChanged={()=>sortFieldChanged('name')} >Name</SortField>
-                        </th>
-                        <th>Assigned</th>
-                        <th>
-                            <SortField queryParams={queryParams} field='priority' sortFieldChanged={()=>sortFieldChanged('priority')} > Priority</SortField>
-                        </th>
-                        <th>
-                            <SortField queryParams={queryParams} field='status' sortFieldChanged={()=>sortFieldChanged('status')} > Status</SortField>
-                        </th>
-                        <th className="px-3 py-2">
-                            <SortField queryParams={queryParams} field='created_at' sortFieldChanged={()=>sortFieldChanged('created_at')}>Date Created </SortField>
-                        </th>
-                        <th className="px-3 py-2">
-                            <SortField queryParams={queryParams} field='due_date' sortFieldChanged={()=>sortFieldChanged('due_date')}>Due Date</SortField>
-                        </th>
-                        <th className="px-3 py-2">Created By</th>
-                        <th className="px-3 py-2">Actions</th>
-                    </tr>
-                    <tr className="text-nowrap">
                         <th className="px-3 py-2"></th>
                         <th className="px-3 py-2"></th>
                         <th className="px-3 py-2">
@@ -100,7 +78,31 @@ export default function TasksTable({tasks, queryParams = null})
                         <th className="px-3 py-2"></th>
                         <th className="px-3 py-2"></th>
                         <th className="px-3 py-2"></th>
-                        <th className="px-3 py-2"></th>
+                        <th className="px-3 py-2">
+                            <Link href={route('task.create')} className="py-2 px-3 rounded shadow  text-white bg-emerald-500 hover:bg-emerald-700">Add Task</Link>
+                        </th>
+                    </tr>
+                    <tr className="text-nowrap">
+                        <th className="px-3 py-2">ID</th>
+                        <th className="px-3 py-2">Image</th>
+                        <th>
+                            <SortField queryParams={queryParams} field='name' sortFieldChanged={()=>sortFieldChanged('name')} >Name</SortField>
+                        </th>
+                        <th>Assigned</th>
+                        <th>
+                            <SortField queryParams={queryParams} field='priority' sortFieldChanged={()=>sortFieldChanged('priority')} > Priority</SortField>
+                        </th>
+                        <th>
+                            <SortField queryParams={queryParams} field='status' sortFieldChanged={()=>sortFieldChanged('status')} > Status</SortField>
+                        </th>
+                        <th className="px-3 py-2">
+                            <SortField queryParams={queryParams} field='created_at' sortFieldChanged={()=>sortFieldChanged('created_at')}>Date Created </SortField>
+                        </th>
+                        <th className="px-3 py-2">
+                            <SortField queryParams={queryParams} field='due_date' sortFieldChanged={()=>sortFieldChanged('due_date')}>Due Date</SortField>
+                        </th>
+                        <th className="px-3 py-2">Created By</th>
+                        <th className="px-3 py-2">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -127,6 +129,7 @@ export default function TasksTable({tasks, queryParams = null})
                                     </td>
                                     <td className="px-3 py-2">{task.due_date}</td>
                                     <td className="px-3 py-2">{task.created_at}</td>
+                                    <td className="px-3 py-2">{task.createdBy.name}</td>
                                     <td className="px-3 py-2">
                                         <Link href={route('task.edit', task.id)}
                                               className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1">
