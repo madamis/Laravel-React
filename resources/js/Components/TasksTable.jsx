@@ -14,14 +14,6 @@ export default function TasksTable({tasks, queryParams = null})
 {
     queryParams = queryParams || {'order_direction': 'asc'};
 
-    const sortFieldChanged = (name) => {
-        queryParams['order_field'] === name
-            ? (queryParams['order_direction'] = queryParams['order_direction'] === 'asc' ? 'desc' : 'asc')
-            : queryParams['order_direction'] = 'asc' ;
-        queryParams['order_field'] = name
-
-        router.get(route('task.index'), queryParams)
-    }
     const searchFieldChanged = (name, value) => {
         if(value){
             queryParams[name] = value
@@ -52,6 +44,7 @@ export default function TasksTable({tasks, queryParams = null})
                                        onKeyPress = {e => onKeyPressed(name, e)}
                             />
                         </th>
+                        <th></th>
                         <th></th>
                         <th className="px-3 py-2">
                             <SelectInput className="w-full"
@@ -88,6 +81,7 @@ export default function TasksTable({tasks, queryParams = null})
                         <th>
                             <SortField queryParams={queryParams} field='name' sortFieldChanged={()=>sortFieldChanged('name')} >Name</SortField>
                         </th>
+                        <th>Project</th>
                         <th>Assigned</th>
                         <th>
                             <SortField queryParams={queryParams} field='priority' sortFieldChanged={()=>sortFieldChanged('priority')} > Priority</SortField>
@@ -115,6 +109,7 @@ export default function TasksTable({tasks, queryParams = null})
                                         <img src={task.image_path} height="100px" width="100px" alt=""/>
                                     </td>
                                     <td className="px-3 py-2">{task.name}</td>
+                                    <td>{task.project.name}</td>
                                     <td>{task.assignedTo.name}</td>
                                     <td className="px-3 py-2">
                                                     <span className={"px-2 py-1 rounded-lg text-gray-50 "

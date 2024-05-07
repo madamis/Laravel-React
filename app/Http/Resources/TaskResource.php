@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class TaskResource extends JsonResource
 {
@@ -24,7 +25,7 @@ class TaskResource extends JsonResource
             'due_date' => (new Carbon($this->due_date))->format('Y-m-d'),
             'priority' => $this->priority,
             'status' => $this->status,
-            'image_path' => $this->image_path,
+            'image_path' => $this->image_path ? Storage::url(''.$this->image_path):'',
             'assignedTo' => $this->assigned_user ? new UserResource($this->assignedUser): null,
             'project' => new ProjectResource($this->project),
             'createdBy' => new UserResource($this->createdBy),
