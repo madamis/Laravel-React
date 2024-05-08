@@ -9,10 +9,25 @@ import {
 } from "@/constants.js";
 import {Link, router} from "@inertiajs/react";
 import Pagination from "@/Components/Pagination.jsx";
+import Alert from "@/Components/Alert.jsx";
+import DangerButton from "@/Components/DangerButton.jsx";
 
-export default function TasksTable({tasks, queryParams = null})
+export default function TasksTable({tasks, queryParams, success})
 {
-    queryParams = queryParams || {'order_direction': 'asc'};
+    queryParams = queryParams || {};
+
+    const sortFieldChanged = (name) => {
+
+        if (queryParams.order_field === name) {
+            console.log(name)
+            queryParams.order_direction = queryParams.order_direction === 'asc' ? 'desc' : 'asc';
+        }else{
+            queryParams.order_direction = 'asc' ;
+            queryParams.order_field = name
+        }
+
+        router.get(route('task.index'), queryParams)
+    }
 
     const searchFieldChanged = (name, value) => {
         if(value){
@@ -28,8 +43,15 @@ export default function TasksTable({tasks, queryParams = null})
         if(e.key !== 'Enter') return;
         searchFieldChanged(name, e.target.value);
     }
+
+    const deleteProject = (task) => {
+        if(!window.confirm(`Do you want to delete task ${task.name}?`))
+            return;
+        router.delete(route('task.destroy', task.id))
+    }
     return (
         <>
+            <Alert success={success} />
             <div className="overflow-auto">
                 <table className="w-full text-sm text-left trl:text-right text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:text-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
@@ -72,7 +94,6 @@ export default function TasksTable({tasks, queryParams = null})
                         <th className="px-3 py-2"></th>
                         <th className="px-3 py-2"></th>
                         <th className="px-3 py-2">
-                            <Link href={route('task.create')} className="py-2 px-3 rounded shadow  text-white bg-emerald-500 hover:bg-emerald-700">Add Task</Link>
                         </th>
                     </tr>
                     <tr className="text-nowrap">
@@ -130,10 +151,11 @@ export default function TasksTable({tasks, queryParams = null})
                                               className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1">
                                             Edit
                                         </Link>
-                                        <Link href={route('task.destroy', task.id)}
-                                              className="font-medium text-red-600 dark:text-red-500 hover:underline mx-1">
+                                        <DangerButton
+                                            onClick={() => deleteProject(task)}
+                                            className="font-medium text-gray-200 dark:text-gray-50 hover:underline mx-1">
                                             Delete
-                                        </Link>
+                                        </DangerButton>
                                     </td>
                                 </tr>
                             ))

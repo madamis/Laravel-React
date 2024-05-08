@@ -8,7 +8,7 @@ import {Link, useForm} from "@inertiajs/react";
 export default function TaskForm({projects, users, task = null})
 {
     const {data, setData, post, put, processing, errors, reset} =useForm({
-        image: task?.image_path ??'',
+        image: '',
         name: task?.name ?? '',
         description: task?.description ?? '',
         status: task?.status ?? '',

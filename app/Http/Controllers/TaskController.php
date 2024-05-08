@@ -12,6 +12,7 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class TaskController extends Controller
@@ -38,7 +39,7 @@ class TaskController extends Controller
         $tasks = $tasksQuery->paginate(10)->onEachSide(1);
 
         return inertia('Task/Index',
-            ['tasks'=>TaskResource::collection($tasks), 'queryParams'=>request()->query() ?: null,]);
+            ['tasks'=>TaskResource::collection($tasks), 'queryParams'=>request()->query() ?: null, 'success'=>session('success')]);
     }
 
     /**
@@ -88,7 +89,13 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        $users = User::all();
+        $projects = Project::all();
+        return inertia('Task/Edit', [
+            'projects'=> ProjectResource::collection($projects),
+            'users'=>UserResource::collection($users),
+            'task'=> new TaskResource($task),
+        ]);
     }
 
     /**
@@ -96,7 +103,23 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        //
+        /** @var $image UploadedFile */
+        $data = $request->validated();
+        $image = $data['image'] ?? null;
+        $data['updated_by'] = Auth::id();
+
+        if($image)
+        {
+            if($task->image_path)
+            {
+                Storage::disk('public')->deleteDirectory(dirname($task->image_path));
+            }
+            $data['image_path'] = $image->store('project/'.Str::random(), 'public');
+        }
+
+        $task->update($data);
+
+        return to_route('task.index')->with('success', 'Task was Updated');
     }
 
     /**
@@ -104,6 +127,12 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $name = $task->name;
+        if($task->image_path)
+        {
+            Storage::disk('public')->deleteDirectory(dirname($task->image_path));
+        }
+        $task->delete();
+        return to_route('task.index')->with('success',"Task $name was successfully deleted");
     }
 }
